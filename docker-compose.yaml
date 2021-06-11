@@ -1,0 +1,45 @@
+version: "3.8"
+
+secrets:
+  config_json:
+    file: secrets.json
+
+services:
+  foundry:
+    image: felddy/foundryvtt:release
+    hostname: "foundry-${INSTANCE_NAME}"
+    init: true
+    restart: "unless-stopped"
+    volumes:
+      - type: bind
+        source: /mnt/disk2-p1/foundry-${INSTANCE_NAME}
+        target: /data
+    ports:
+      - target: 30000
+        published: ${EXTERNAL_PORT}
+        protocol: tcp
+    networks:
+      - proxy
+    environment:
+      - FOUNDRY_LICENSE_KEY=${FOUNDRY_LICENSE_KEY}
+      - FOUNDRY_WORLD=${DEFAULT_WORLD}
+    secrets:
+      - source: config_json
+        target: config.json
+    labels:
+      - "traefik.docker.network=proxy"
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.foundryvtt${INSTANCE_NAME}-https-redirect.redirectscheme.scheme=http"
+      - "traefik.http.routers.foundryvtt${INSTANCE_NAME}-secure.entrypoints=https"
+      - "traefik.http.routers.foundryvtt${INSTANCE_NAME}-secure.rule=Host(`foundry-${INSTANCE_NAME}.a-hat.dev`)"
+      - "traefik.http.routers.foundryvtt${INSTANCE_NAME}-secure.service=foundryvtt${INSTANCE_NAME}"
+      - "traefik.http.routers.foundryvtt${INSTANCE_NAME}-secure.tls=true"
+      - "traefik.http.routers.foundryvtt${INSTANCE_NAME}-secure.tls.certresolver=http"
+      - "traefik.http.routers.foundryvtt${INSTANCE_NAME}.entrypoints=http"
+      - "traefik.http.routers.foundryvtt${INSTANCE_NAME}.middlewares=foundryvtt${INSTANCE_NAME}-https-redirect"
+      - "traefik.http.routers.foundryvtt${INSTANCE_NAME}.rule=Host(`foundry-${INSTANCE_NAME}.a-hat.dev`)"
+      - "traefik.http.services.foundryvtt${INSTANCE_NAME}.loadbalancer.server.port=${EXTERNAL_PORT}"
+
+networks:
+  proxy:
+    external: true
