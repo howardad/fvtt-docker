@@ -27,18 +27,9 @@ services:
       - source: config_json
         target: config.json
     labels:
-      - "traefik.docker.network=proxy"
       - "traefik.enable=true"
-      - "traefik.http.middlewares.foundryvtt${INSTANCE_NAME}-https-redirect.redirectscheme.scheme=http"
-      - "traefik.http.routers.foundryvtt${INSTANCE_NAME}-secure.entrypoints=https"
-      - "traefik.http.routers.foundryvtt${INSTANCE_NAME}-secure.rule=Host(`foundry-${INSTANCE_NAME}.a-hat.dev`)"
-      - "traefik.http.routers.foundryvtt${INSTANCE_NAME}-secure.service=foundryvtt${INSTANCE_NAME}"
-      - "traefik.http.routers.foundryvtt${INSTANCE_NAME}-secure.tls=true"
-      - "traefik.http.routers.foundryvtt${INSTANCE_NAME}-secure.tls.certresolver=http"
-      - "traefik.http.routers.foundryvtt${INSTANCE_NAME}.entrypoints=http"
-      - "traefik.http.routers.foundryvtt${INSTANCE_NAME}.middlewares=foundryvtt${INSTANCE_NAME}-https-redirect"
       - "traefik.http.routers.foundryvtt${INSTANCE_NAME}.rule=Host(`foundry-${INSTANCE_NAME}.a-hat.dev`)"
-      - "traefik.http.services.foundryvtt${INSTANCE_NAME}.loadbalancer.server.port=${EXTERNAL_PORT}"
+      - "traefik.http.services.foundryvtt${INSTANCE_NAME}.loadbalancer.server.port=30000"
 
 networks:
   proxy:
