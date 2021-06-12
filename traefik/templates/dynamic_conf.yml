@@ -1,0 +1,12 @@
+http:
+  routers:
+    traefik:
+      rule: Host(`<host>`)
+      service: api@internal
+      middlewares:
+      - auth
+  middlewares:
+    auth:
+      basicauth:
+        users:
+        - <pwd>

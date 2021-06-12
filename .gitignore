@@ -1,1 +1,15 @@
+# Don't push secrets
 secrets.json
+
+# Ignore generated files for traefik
+traefik/traefik.yml
+traefik/dynamic_conf.yml
+traefik/acme.json
+
+# Ignore generated files for portainer
+portainer/data
+portainer/docker-compose.yaml
+
+# Ignore all env files for Foundry except for the default
+fvtt/.config/*
+!fvtt/.config/.env.default

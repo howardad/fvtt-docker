@@ -1,0 +1,26 @@
+version: '3'
+
+services:
+  traefik:
+    image: traefik:v2.4
+    container_name: traefik
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - proxy
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./traefik.yml:/etc/traefik/traefik.yml:ro
+      - ./dynamic_conf.yml:/etc/traefik/dynamic_conf.yml:ro
+      - ./acme.json:/acme.json
+    labels:
+      - "traefik.enable=true"
+
+networks:
+  proxy:
+    external: true
