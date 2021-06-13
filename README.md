@@ -1,6 +1,12 @@
 # fvtt-docker
 
-This repo provides an easy way to dockerize multiple instances of Foundry Virtual Tabletop using Traefik and Portainer.
+This repo provides an easy way to run multiple instances of Foundry Virtual Tabletop using Docker, Traefik and Portainer.
+
+Docker is a container system that is used to deploy the services and Foundry instances running on your server.  Each Docker container runs a single service in isolation from the other containers running on your server.
+
+Traefik is a reverse-proxy service that can take incoming requests to your server and route them to the correct backend.  In this case, one or more subdomains can be configured to point at your server (e.g. `foundry-prod.myserver.com` and `foundry-dev.myserver.com`), and Traefik figures out which Foundry instance to connect you to based on the subdomain used.
+
+Portainer is a container management system that makes it easier to monitor, configure and manage the Docker containers deployed on your server.
 
 Inspired by this guide: https://benprice.dev/posts/fvtt-docker-tutorial/
 Using Felddy's Foundry image: https://github.com/felddy/foundryvtt-docker
@@ -9,7 +15,12 @@ Using Felddy's Foundry image: https://github.com/felddy/foundryvtt-docker
 
 ## Prerequisites
 
+ - This guide assumes basic familiarity with Linux.  In particular, this guide was written with Debian in mind and the scripts are written for the Bash shell.  But this guide can likely be adapted relatively easily for other Linux distributions or shells.  
  - Docker and docker-compose
+ - A valid domain pointing at your server.
+ - Two subdomains to be used for Traefik and Portainer (e.g. `monitor.mysite.com` for Traefik and `manage.mysite.com` for Portainer).
+ - Additional subdomains for each instance of Foundry you plan on running (you can start with one; more can easily be added later).
+ - A [Foundry VTT](https://foundryvtt.com/) account.  Please follow [Foundry's license agreement](https://foundryvtt.com/article/license/) and ensure you have an appropriate number of software licenses purchased based on the number of Foundry instances you will be running and their intended usage.
 
 ## Traefik and Portainer
 
@@ -36,11 +47,11 @@ Wait a few minutes, and both services should become available at the hosts you p
 
 ## Foundry
 
-First, ensure you have a secrets.json with the following contents:
+First, ensure you have a secrets.json with the following contents (placed in the `fvtt` directory):
 
 ```
 {
-  "foundry_admin_key": "<password used to log into your foundry instance>"
+  "foundry_admin_key": "<admin password you will use to manage your foundry instance>"
   "foundry_password": "<password used to log into your foundry account at foundryvtt.com>"
   "foundry_username": "<username used to log into your foundry account at foundryvtt.com>"
 }
@@ -58,7 +69,7 @@ To customize your instances, simply copy `.config/.env.default` and modify the c
 
 ### Env Variables
 
-- COMPOSE\_PROJECT\_NAME - Unique name for this docker-compose project.  I recommend using `foundry-<instance_name>` for consistency.  This _must_ be unique across all running instances of Foundry.
-- INSTANCE\_NAME - Unique name for this foundry instance (e.g. 'prod' or 'dev').  This should also be unique across all running instances of foundry.
-- FOUNDRY\_LICENSE\_KEY - License key to be used for this foundry instance.  Can either be the raw value of the key itself, or an index (starting from 1) of the key as listed in your account details on foundryvtt.com.  If unset, a random key will be chosen from your account.
-- DEFAULT\_WORLD - Optional.  The world that should be launched by default for this instance whenever it is started.
+- `COMPOSE_PROJECT_NAME` - Unique name for this docker-compose project.  This _must_ be unique across all running instances of Foundry.  Recommended that this be the same as `INSTANCE_NAME`, but it doesn't have to be.
+- `INSTANCE_NAME` - The subdomain you are using for this foundry instance (e.g. if you intend to use `foundry-prod.mysite.com` to access this instance, this should be `foundry-prod`. 
+- `FOUNDRY_LICENSE_KEY` - License key to be used for this foundry instance.  Can either be the raw value of the key itself, or an index (starting from 1) of the key as listed in your account details on foundryvtt.com.  If unset, a random key will be chosen from your account.
+- `DEFAULT_WORLD` - Optional.  The world that should be launched by default for this instance whenever it is started.

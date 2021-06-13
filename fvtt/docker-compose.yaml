@@ -16,7 +16,6 @@ services:
         target: /data
     ports:
       - target: 30000
-        published: ${EXTERNAL_PORT}
         protocol: tcp
     networks:
       - proxy
@@ -28,8 +27,8 @@ services:
         target: config.json
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.foundryvtt${INSTANCE_NAME}.rule=Host(`foundry-${INSTANCE_NAME}.a-hat.dev`)"
-      - "traefik.http.services.foundryvtt${INSTANCE_NAME}.loadbalancer.server.port=30000"
+      - "traefik.http.routers.${INSTANCE_NAME}.rule=Host(`${INSTANCE_NAME}.a-hat.dev`)"
+      - "traefik.http.services.${INSTANCE_NAME}.loadbalancer.server.port=30000"
 
 networks:
   proxy:
