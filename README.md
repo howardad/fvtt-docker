@@ -57,6 +57,8 @@ First, ensure you have a secrets.json with the following contents (placed in the
 }
 ```
 
+Next, make sure you have a directory established for the instance of Foundry you'll be running.  Once you do, update `docker-compose.yaml` with the correct path under `services.foundry.volumes.source`.  You don't have to use `${INSTANCE_NAME}` in the path, but doing so can help keep the directories for your various instances organized.
+
 To bring up a default instance of Foundry, simply run the following:
 
 ```

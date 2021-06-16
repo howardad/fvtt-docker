@@ -12,7 +12,7 @@ services:
     restart: "unless-stopped"
     volumes:
       - type: bind
-        source: /mnt/disk2-p1/foundry-${INSTANCE_NAME}
+        source: /mnt/disk2-p1/${INSTANCE_NAME}
         target: /data
     ports:
       - target: 30000
