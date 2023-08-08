@@ -51,8 +51,8 @@ First, ensure you have a secrets.json with the following contents (placed in the
 
 ```
 {
-  "foundry_admin_key": "<admin password you will use to manage your foundry instance>"
-  "foundry_password": "<password used to log into your foundry account at foundryvtt.com>"
+  "foundry_admin_key": "<admin password you will use to manage your foundry instance>",
+  "foundry_password": "<password used to log into your foundry account at foundryvtt.com>",
   "foundry_username": "<username used to log into your foundry account at foundryvtt.com>"
 }
 ```
